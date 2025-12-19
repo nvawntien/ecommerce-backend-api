@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE IF NOT EXISTS users (
     user_id UUID PRIMARY KEY,
     full_name VARCHAR(255),
@@ -16,7 +18,6 @@ CREATE TABLE IF NOT EXISTS categories (
     slug VARCHAR(100) UNIQUE NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     category_id INT REFERENCES categories(id) ON DELETE SET NULL,
@@ -28,7 +29,6 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
 
 CREATE TABLE IF NOT EXISTS product_variants (
     id SERIAL PRIMARY KEY,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS product_variants (
 
 CREATE TABLE IF NOT EXISTS orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES users(user_id) ON DELETE SET NULL,
     total_amount DECIMAL(12, 2) NOT NULL,
     status VARCHAR(50) DEFAULT 'pending', 
     shipping_address TEXT NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 CREATE TABLE IF NOT EXISTS reviews (
     id SERIAL PRIMARY KEY,
     product_id UUID REFERENCES products(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES users(user_id) ON DELETE SET NULL,
     rating INT CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
