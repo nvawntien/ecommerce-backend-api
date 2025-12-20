@@ -10,3 +10,21 @@
 {"level":"INFO","time":"2025-12-18T16:09:11.574+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
 {"level":"INFO","time":"2025-12-18T16:12:16.759+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
 {"level":"INFO","time":"2025-12-18T16:12:16.835+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:13:33.207+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
+{"level":"INFO","time":"2025-12-20T12:13:33.317+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:13:33.329+0700","caller":"initialize/redis.go:30","msg":"Connected to Redis successfully"}
+{"level":"INFO","time":"2025-12-20T12:14:40.582+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
+{"level":"INFO","time":"2025-12-20T12:14:40.632+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:14:40.638+0700","caller":"initialize/redis.go:30","msg":"Connected to Redis successfully"}
+{"level":"INFO","time":"2025-12-20T12:23:45.168+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
+{"level":"INFO","time":"2025-12-20T12:23:45.228+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:23:45.236+0700","caller":"initialize/redis.go:30","msg":"Connected to Redis successfully"}
+{"level":"INFO","time":"2025-12-20T12:24:22.648+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
+{"level":"INFO","time":"2025-12-20T12:24:22.719+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:24:22.726+0700","caller":"initialize/redis.go:30","msg":"Connected to Redis successfully"}
+{"level":"INFO","time":"2025-12-20T12:53:44.784+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
+{"level":"INFO","time":"2025-12-20T12:53:44.966+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:53:44.980+0700","caller":"initialize/redis.go:30","msg":"Connected to Redis successfully"}
+{"level":"INFO","time":"2025-12-20T12:57:45.318+0700","caller":"initialize/run.go:14","msg":"Init Logger complete","Init":"Success"}
+{"level":"INFO","time":"2025-12-20T12:57:45.383+0700","caller":"initialize/postgres.go:30","msg":"Init postgreSQL successfully"}
+{"level":"INFO","time":"2025-12-20T12:57:45.400+0700","caller":"initialize/redis.go:30","msg":"Connected to Redis successfully"}

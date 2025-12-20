@@ -15,6 +15,8 @@ func Run() *gin.Engine {
 	m := global.Config.PostgreSQL
 	fmt.Println("Loading PostgreSQL with config:", m.Username, m.Host, m.DBName)
 	InitPostgres()
+	fmt.Println("Loading Redis...")
+	InitRedis()
 	r := InitRouter()
 	return r
 }

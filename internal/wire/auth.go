@@ -8,7 +8,8 @@ import (
 
 func InitUserRouterHandler() *controller.AuthController {
 	userRepo := repoimpl.NewUserRepository()
-	authSvc := svcimpl.NewAuthService(userRepo)
+	otpRepo := repoimpl.NewOTPRepository()
+	authSvc := svcimpl.NewAuthService(userRepo, otpRepo)
 	authCtrl := controller.NewAuthController(authSvc)
 	return authCtrl
 }

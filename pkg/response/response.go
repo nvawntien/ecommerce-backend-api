@@ -7,25 +7,31 @@ import (
 )
 
 type ResponseData struct {
-	Code    int         `json:"code"`    // Status Code
-	Message string      `json:"message"` // Message
-	Data    interface{} `json:"data"`    // Data Payload
+	Code    int         `json:"code"`           // Status Code
+	Message string      `json:"message"`        // Message
+	Data    interface{} `json:"data,omitempty"` // Data Payload
 }
 
 // success response
-func SuccessResponse(c *gin.Context, code int, data interface{}) {
+func Success(c *gin.Context, message string, data interface{}) {
 	c.JSON(http.StatusOK, ResponseData{
-		Code:    code,
-		Message: msg[code],
+		Code:    CodeSuccess,
+		Message: message,
 		Data:    data,
 	})
 }
 
 // error response
-func ErrorResponse(c *gin.Context, code int, message string) {
-	c.JSON(http.StatusOK, ResponseData{
-		Code:    code,
+func Error(c *gin.Context, httpStatus int, internalCode int, cusMsg string) {
+	message := msg[internalCode]
+
+	if cusMsg != "" {
+		message = cusMsg
+	}
+
+	c.JSON(httpStatus, ResponseData{
+		Code:    internalCode,
 		Message: message,
 		Data:    nil,
-	})		
-} 
+	})
+}
