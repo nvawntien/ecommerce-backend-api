@@ -3,8 +3,9 @@ package errors
 import "errors"
 
 var (
-	ErrUserNotFound = errors.New("user not found")
-	ErrEmailExisted = errors.New("email already exists")
-	ErrOTPInvalid   = errors.New("invalid OTP code")
-	ErrOTPExpired   = errors.New("OTP code has expired")
+	ErrInvalidUser = errors.New("Email hoặc mật khẩu không đúng")
+	ErrUserNotFound = errors.New("Không tìm thấy người dùng")
+	ErrEmailExisted = errors.New("Email đã tồn tại")
+	ErrOTPInvalid   = errors.New("Mã OTP không hợp lệ")
+	ErrOTPExpired   = errors.New("Mã OTP đã hết hạn")
 )

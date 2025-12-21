@@ -3,6 +3,7 @@ package implements
 import (
 	"context"
 	"fmt"
+	"go-ecommerce-backend-api/global"
 	"go-ecommerce-backend-api/internal/models"
 	"go-ecommerce-backend-api/internal/repository"
 	"go-ecommerce-backend-api/internal/services"
@@ -49,8 +50,8 @@ func (as *authServiceImpl) Register(ctx context.Context, req request.RegisterReq
 		Email:    req.Email,
 		Password: hashedPassword,
 		IsActive: false,
-		CreateAt: time.Now(),
-		UpdateAt: time.Now(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	if err := as.userRepo.CreateUser(ctx, user); err != nil {
@@ -112,7 +113,7 @@ func (as *authServiceImpl) ResendOTP(ctx context.Context, req request.ResendOTPR
 	}
 
 	fullName, err := as.userRepo.GetNameByEmail(ctx, req.Email)
-	
+
 	if err != nil {
 		return fmt.Errorf("Lấy tên người dùng thất bại: %w", err)
 	}
@@ -126,4 +127,32 @@ func (as *authServiceImpl) ResendOTP(ctx context.Context, req request.ResendOTPR
 	}
 
 	return nil
+}
+
+func (as *authServiceImpl) Login(ctx context.Context, req request.LoginRequest) (*models.User, string, string, error) {
+	user, err := as.userRepo.GetUserByEmail(ctx, req.Email)
+
+	if err != nil {
+		return nil, "", "", fmt.Errorf("Truy xuất thông tin người dùng bằng email thất bại")
+	}
+
+	if !user.IsActive {
+		return nil, "", "", fmt.Errorf("Tài khoản chưa kích hoạt")
+	}
+
+	if check := utils.ComparePasswords(user.Password, []byte(req.Password)); !check {
+		return nil, "", "", errors.ErrInvalidUser
+	}
+
+	accessToken, err := utils.GenerateToken(user.UserID, "access", global.Config.JWT.AccessExpiry, global.Config.JWT.AccessSecret)
+	if err != nil {
+		return nil, "", "", fmt.Errorf("Tạo access token thất bại: %w", err)
+	}
+
+	refreshToken, err := utils.GenerateToken(user.UserID, "refresh", global.Config.JWT.RefreshExpiry, global.Config.JWT.RefreshSecret)
+	if err != nil {
+		return nil, "", "", fmt.Errorf("Tạo refresh token thất bại: %w", err)
+	}
+	
+	return user, accessToken, refreshToken, nil
 }

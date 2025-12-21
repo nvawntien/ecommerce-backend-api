@@ -35,8 +35,8 @@ func (ur *userRepositoryImpl) CreateUser(ctx context.Context, user *models.User)
 		user.Email,
 		user.Password,
 		user.IsActive,
-		user.CreateAt,
-		user.UpdateAt,
+		user.CreatedAt,
+		user.UpdatedAt,
 	)
 
 	return err
@@ -53,4 +53,13 @@ func (ur *userRepositoryImpl) GetNameByEmail(ctx context.Context, email string) 
 	query := `SELECT full_name FROM users WHERE email = $1`
 	err := ur.pdb.GetContext(ctx, &fullname, query, email)
 	return fullname, err
+}
+
+func (ur *userRepositoryImpl) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	var user models.User
+	query := `SELECT user_id, full_name, email, password, role, is_active, created_at, updated_at 
+		FROM users WHERE email = $1`
+	err := ur.pdb.GetContext(ctx, &user, query, email)
+	//global.Logger.Error("Lỗi truy xuất thông tin người dùng", zap.Error(err))
+	return &user, err
 }

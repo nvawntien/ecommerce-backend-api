@@ -10,4 +10,5 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.User) error
 	ActiveUserByEmail(ctx context.Context, email string) error
 	GetNameByEmail(ctx context.Context, email string) (string, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
 }
