@@ -26,6 +26,10 @@ func (ar *AuthRouter) InitAuthRouter(r *gin.RouterGroup) {
 	authRouter.POST("/login", authCtrl.Login)
 
 	authRouter.POST("/logout", authCtrl.Logout)
-	
+
 	authRouter.POST("/refresh-token", middlewares.IsExpiredRefreshToken(), authCtrl.RefreshToken)
+
+	authRouter.POST("/forgot-password", authCtrl.ForgotPassword)
+
+	authRouter.POST("/reset-password", authCtrl.ResetPassword)
 }

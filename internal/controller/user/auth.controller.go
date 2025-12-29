@@ -121,3 +121,41 @@ func (ac *AuthController) RefreshToken(c *gin.Context) {
 	c.SetCookie("refresh_token", refreshToken, global.Config.JWT.RefreshExpiry, "/refresh-token", "localhost", false, true)
 	response.Success(c, "Làm mới token thành công", nil)
 }
+
+func (ac *AuthController) ForgotPassword(c *gin.Context) {
+	var req request.ForgotPasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "")
+		return
+	}
+
+	if err := ac.authSvc.ForgotPassword(c.Request.Context(), req); err != nil {
+		if err == errors.ErrUserNotFound {
+			response.Error(c, http.StatusNotFound, response.CodeUnauthorized, "Người dùng không tồn tại.")
+			return
+		}
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Gửi mã đặt lại mật khẩu thành công. Vui lòng kiểm tra email của bạn.", nil)
+}
+
+func (ac *AuthController) ResetPassword(c *gin.Context) {
+	var req request.ResetPasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "")
+		return
+	}
+
+	if err := ac.authSvc.ResetPassword(c.Request.Context(), req); err != nil {
+		if err == errors.ErrTokenInvalid {
+			response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Token không hợp lệ.")
+			return
+		}
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Đặt lại mật khẩu thành công.", nil)
+}

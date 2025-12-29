@@ -63,3 +63,16 @@ func (ur *userRepositoryImpl) GetUserByEmail(ctx context.Context, email string) 
 	//global.Logger.Error("Lỗi truy xuất thông tin người dùng", zap.Error(err))
 	return &user, err
 }
+
+func (ur *userRepositoryImpl) GetUserIDByEmail(ctx context.Context, email string) (string, error) {
+	var userID string
+	query := `SELECT user_id FROM users WHERE email = $1`
+	err := ur.pdb.GetContext(ctx, &userID, query, email)
+	return userID, err
+}
+
+func (ur *userRepositoryImpl) UpdatePasswordByUserID(ctx context.Context, userID string, newPassword string) error {
+	query := `UPDATE users SET password = $1, updated_at = NOW() WHERE user_id = $2`
+	_, err := ur.pdb.ExecContext(ctx, query, newPassword, userID)
+	return err
+}

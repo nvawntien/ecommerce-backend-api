@@ -49,8 +49,10 @@ type EmailSetting struct {
 }
 
 type JWTSetting struct {
-	AccessSecret  string `mapstructure:"access_secret"`
-	RefreshSecret string `mapstructure:"refresh_secret"`
-	AccessExpiry  int    `mapstructure:"access_expiry"`
-	RefreshExpiry int    `mapstructure:"refresh_expiry"`
+	AccessSecret        string `mapstructure:"access_secret"`
+	RefreshSecret       string `mapstructure:"refresh_secret"`
+	ResetPasswordSecret string `mapstructure:"reset_password_secret"`
+	AccessExpiry        int    `mapstructure:"access_expiry"`
+	RefreshExpiry       int    `mapstructure:"refresh_expiry"`
+	ResetPasswordExpiry int    `mapstructure:"reset_password_expiry"`
 }

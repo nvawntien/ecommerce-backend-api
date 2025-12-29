@@ -35,3 +35,19 @@ func (or *otpRepositoryImpl) DeleteOTP(ctx context.Context, email string) error 
 	return or.rdb.Del(ctx, key).Err()
 }
 
+func (or *otpRepositoryImpl) SetResetPasswordToken(ctx context.Context, token string, userID string) error {
+	key := "reset_token:" + token
+	return or.rdb.Set(ctx, key, userID, time.Minute*10).Err()
+}
+
+func (or *otpRepositoryImpl) GetResetPasswordToken(ctx context.Context, token string) (string, error) {
+	key := "reset_token:" + token
+	return or.rdb.Get(ctx, key).Result()
+}
+
+func (or *otpRepositoryImpl) DeleteResetPasswordToken(ctx context.Context, token string) error {
+	key := "reset_token:" + token
+	return or.rdb.Del(ctx, key).Err()
+}
+
+

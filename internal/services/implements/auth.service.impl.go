@@ -170,3 +170,61 @@ func (as *authServiceImpl) RefreshToken(ctx context.Context, userID string, user
 
 	return accessToken, refreshToken, nil
 }
+
+func (as *authServiceImpl) ForgotPassword(ctx context.Context, req request.ForgotPasswordRequest) error {
+	exists, err := as.userRepo.CheckEmailExists(ctx, req.Email)
+
+	if err != nil {
+		return fmt.Errorf("Kiểm tra người dùng bằng email thất bại: %w", err)
+	}
+
+	if !exists {
+		return errors.ErrUserNotFound
+	}
+
+	userID, err := as.userRepo.GetUserIDByEmail(ctx, req.Email)
+
+	if err != nil {
+		return fmt.Errorf("Lấy userID bằng email thất bại: %w", err)
+	}
+
+	resetToken, err := utils.GenerateToken(userID, "customer", global.Config.JWT.ResetPasswordExpiry, global.Config.JWT.ResetPasswordSecret)
+
+	if err := as.otpRepo.SetResetPasswordToken(ctx, resetToken, userID); err != nil {
+		return fmt.Errorf("Lưu token thất bại: %w", err)
+	}
+
+	resetLink := fmt.Sprintf("http://localhost:3000/reset-password?token=%s", resetToken)
+
+	go func() {
+		if err := utils.SendResetPasswordEmail(req.Email, resetLink); err != nil {
+			fmt.Printf("Gửi email reset password thất bại: %v\n", err)
+		}
+	}()
+
+	return nil
+}
+
+func (as *authServiceImpl) ResetPassword(ctx context.Context, req request.ResetPasswordRequest) error {
+	userID, err := as.otpRepo.GetResetPasswordToken(ctx, req.Token)
+
+	if err != nil || userID == "" {
+		return errors.ErrTokenInvalid
+	}
+
+	hashedPassword, err := utils.HashAndSalt([]byte(req.NewPassword))
+	if err != nil {
+		return fmt.Errorf("Hash mật khẩu thất bại: %w", err)
+	}
+
+	if err := as.userRepo.UpdatePasswordByUserID(ctx, userID, hashedPassword);  err != nil {
+		return fmt.Errorf("Cập nhật mật khẩu thất bại: %w", err)
+	}
+
+	if err := as.otpRepo.DeleteResetPasswordToken(ctx, req.Token); err != nil {
+		return fmt.Errorf("Xoá token thất bại: %w", err)
+	}
+
+	return nil
+
+}
