@@ -95,3 +95,29 @@ func (ac *AuthController) Login(c *gin.Context) {
 	c.SetCookie("refresh_token", refreshToken, global.Config.JWT.RefreshExpiry, "/", "localhost", false, true)
 	response.Success(c, "Đăng nhập thành công", user)
 }
+
+func (ac *AuthController) Logout(c *gin.Context) {
+	c.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+	c.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
+	response.Success(c, "Đăng xuất thành công", nil)
+}
+
+func (ac *AuthController) RefreshToken(c *gin.Context) {
+	userID := c.GetString("user_id")
+	userRole := c.GetString("role")
+
+	if userID == "" || userRole == "" {
+		response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid token claims")
+		return
+	}
+
+	accessToken, refreshToken, err := ac.authSvc.RefreshToken(c.Request.Context(), userID, userRole)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	c.SetCookie("access_token", accessToken, global.Config.JWT.AccessExpiry, "/", "localhost", false, true)
+	c.SetCookie("refresh_token", refreshToken, global.Config.JWT.RefreshExpiry, "/refresh-token", "localhost", false, true)
+	response.Success(c, "Làm mới token thành công", nil)
+}

@@ -11,4 +11,5 @@ type AuthService interface {
 	VerifyOTP(ctx context.Context, req request.VerifyOTPRequest) error
 	ResendOTP(ctx context.Context, req request.ResendOTPRequest) error
 	Login(ctx context.Context, req request.LoginRequest) (*models.User, string, string, error)
+	RefreshToken(ctx context.Context, userID string, userRole string) (string, string, error)
 }
