@@ -17,6 +17,8 @@ func (ar *AuthRouter) InitAuthRouter(r *gin.RouterGroup) {
 
 	authRouter.GET("/welcome", authCtrl.Welcome)
 
+	authRouter.GET("/get-me", middlewares.IsAuthenticated(), authCtrl.GetMe)
+
 	authRouter.POST("/register", authCtrl.Register)
 
 	authRouter.POST("/verify-otp", authCtrl.VerifyOTP)

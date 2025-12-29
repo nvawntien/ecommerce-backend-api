@@ -7,6 +7,7 @@ import (
 )
 
 type AuthService interface {
+	GetMe(ctx context.Context, userID string) (*models.User, error)
 	Register(ctx context.Context, req request.RegisterRequest) error
 	VerifyOTP(ctx context.Context, req request.VerifyOTPRequest) error
 	ResendOTP(ctx context.Context, req request.ResendOTPRequest) error

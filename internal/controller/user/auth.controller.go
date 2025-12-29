@@ -26,6 +26,22 @@ func (ac *AuthController) Welcome(c *gin.Context) {
 	fmt.Println("Hello World!")
 }
 
+func (ac *AuthController) GetMe(c *gin.Context) {
+	userID := c.GetString("user_id")
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid token claims")
+		return
+	}
+
+	user, err := ac.authSvc.GetMe(c.Request.Context(), userID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Lấy thông tin người dùng thành công", user)
+}
+
 func (ac *AuthController) Register(c *gin.Context) {
 	var req request.RegisterRequest
 

@@ -27,6 +27,19 @@ func NewAuthService(userRepo repository.UserRepository, otpRepo repository.OTPRe
 	}
 }
 
+func (as *authServiceImpl) GetMe(ctx context.Context, userID string) (*models.User, error) {
+	user, err := as.userRepo.GetUserByID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("Truy xuất thông tin người dùng thất bại: %w", err)
+	}
+
+	if user == nil {
+		return nil, errors.ErrUserNotFound
+	}
+
+	return user, nil
+}
+
 func (as *authServiceImpl) Register(ctx context.Context, req request.RegisterRequest) error {
 	exists, err := as.userRepo.CheckEmailExists(ctx, req.Email)
 
