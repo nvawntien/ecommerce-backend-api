@@ -76,3 +76,11 @@ func (ur *userRepositoryImpl) UpdatePasswordByUserID(ctx context.Context, userID
 	_, err := ur.pdb.ExecContext(ctx, query, newPassword, userID)
 	return err
 }
+
+func (ur *userRepositoryImpl) GetUserByID(ctx context.Context, userID string) (*models.User, error) {
+	var user models.User
+	query := `SELECT user_id, full_name, email, password, role, is_active, created_at, updated_at
+		FROM users WHERE user_id = $1`
+	err := ur.pdb.GetContext(ctx, &user, query, userID)
+	return &user, err
+}

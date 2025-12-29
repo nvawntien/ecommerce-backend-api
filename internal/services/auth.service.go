@@ -14,4 +14,5 @@ type AuthService interface {
 	RefreshToken(ctx context.Context, userID string, userRole string) (string, string, error)
 	ForgotPassword(ctx context.Context, req request.ForgotPasswordRequest) error
 	ResetPassword(ctx context.Context, req request.ResetPasswordRequest) error
+	ChangePassword(ctx context.Context, userID string, req request.ChangePasswordRequest) error
 }

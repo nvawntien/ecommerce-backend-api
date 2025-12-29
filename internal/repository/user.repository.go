@@ -11,6 +11,7 @@ type UserRepository interface {
 	ActiveUserByEmail(ctx context.Context, email string) error
 	GetNameByEmail(ctx context.Context, email string) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
+	GetUserByID(ctx context.Context, userID string) (*models.User, error)
 	GetUserIDByEmail(ctx context.Context, email string) (string, error)
 	UpdatePasswordByUserID(ctx context.Context, userID string, newPassword string) error
 }

@@ -159,3 +159,28 @@ func (ac *AuthController) ResetPassword(c *gin.Context) {
 
 	response.Success(c, "Đặt lại mật khẩu thành công.", nil)
 }
+
+func (ac *AuthController) ChangePassword(c *gin.Context) {
+	var req request.ChangePasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "")
+		return
+	}
+
+	userID := c.GetString("user_id")
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid token claims")
+		return
+	}
+
+	if err := ac.authSvc.ChangePassword(c.Request.Context(), userID, req); err != nil {
+		if err == errors.ErrInvalidUser {
+			response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Mật khẩu hiện tại không đúng.")
+			return
+		}
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Đổi mật khẩu thành công.", nil)
+}

@@ -226,5 +226,31 @@ func (as *authServiceImpl) ResetPassword(ctx context.Context, req request.ResetP
 	}
 
 	return nil
+}
 
+func (as *authServiceImpl) ChangePassword(ctx context.Context, userID string, req request.ChangePasswordRequest) error {
+	user, err := as.userRepo.GetUserByID(ctx, userID)
+
+	if err != nil {
+		return fmt.Errorf("Truy xuất thông tin người dùng thất bại: %w", err)
+	}
+
+	if user == nil {
+		return errors.ErrUserNotFound
+	}
+
+	if check := utils.ComparePasswords(user.Password, []byte(req.OldPassword)); !check {
+		return errors.ErrInvalidUser
+	}
+
+	hashedPassword, err := utils.HashAndSalt([]byte(req.NewPassword))
+	if err != nil {
+		return fmt.Errorf("Hash mật khẩu thất bại: %w", err)
+	}
+
+	if err := as.userRepo.UpdatePasswordByUserID(ctx, userID, hashedPassword);  err != nil {
+		return fmt.Errorf("Cập nhật mật khẩu thất bại: %w", err)
+	}
+
+	return nil
 }

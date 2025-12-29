@@ -32,4 +32,6 @@ func (ar *AuthRouter) InitAuthRouter(r *gin.RouterGroup) {
 	authRouter.POST("/forgot-password", authCtrl.ForgotPassword)
 
 	authRouter.POST("/reset-password", authCtrl.ResetPassword)
+
+	authRouter.POST("/change-password", middlewares.IsAuthenticated(), authCtrl.ChangePassword)
 }
