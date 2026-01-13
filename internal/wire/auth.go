@@ -1,7 +1,7 @@
 package wire
 
 import (
-	controller "go-ecommerce-backend-api/internal/controller/user"
+	controller "go-ecommerce-backend-api/internal/controller"
 	repoimpl "go-ecommerce-backend-api/internal/repository/implements"
 	svcimpl "go-ecommerce-backend-api/internal/services/implements"
 )

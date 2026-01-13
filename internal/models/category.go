@@ -5,5 +5,5 @@ type Category struct {
 	ParentID *int       `db:"parent_id" json:"parent_id,omitempty"`
 	Name     string     `db:"name" json:"name"`
 	Slug     string     `db:"slug" json:"slug"`
-	Children []Category `json:"children,omitempty"`
+	Children []*Category `json:"children,omitempty"`
 }

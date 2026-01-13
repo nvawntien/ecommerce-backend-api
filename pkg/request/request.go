@@ -35,3 +35,8 @@ type ChangePasswordRequest struct {
 	NewPassword     string `json:"new_password" binding:"required,min=8"`
 	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=NewPassword"`
 }
+
+type CreateCategoryRequest struct {
+	Name     string `json:"name" binding:"required"`
+	ParentID *int   `json:"parent_id,omitempty"`
+}

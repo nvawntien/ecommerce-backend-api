@@ -88,3 +88,17 @@ func IsExpiredRefreshToken() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func IsAdmin() gin.HandlerFunc {
+	return func (c *gin.Context) {
+		role := c.GetString("role")
+		if role != "admin" {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"code":    10403,
+				"message": "Bạn không có quyền truy cập tài nguyên này",
+			})
+			return
+		}
+		c.Next()
+	}
+}

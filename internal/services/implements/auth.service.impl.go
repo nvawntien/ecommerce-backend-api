@@ -157,12 +157,12 @@ func (as *authServiceImpl) Login(ctx context.Context, req request.LoginRequest) 
 		return nil, "", "", errors.ErrInvalidUser
 	}
 
-	accessToken, err := utils.GenerateToken(user.UserID, "customer", global.Config.JWT.AccessExpiry, global.Config.JWT.AccessSecret)
+	accessToken, err := utils.GenerateToken(user.UserID, user.Role, global.Config.JWT.AccessExpiry, global.Config.JWT.AccessSecret)
 	if err != nil {
 		return nil, "", "", fmt.Errorf("Tạo access token thất bại: %w", err)
 	}
 
-	refreshToken, err := utils.GenerateToken(user.UserID, "customer", global.Config.JWT.RefreshExpiry, global.Config.JWT.RefreshSecret)
+	refreshToken, err := utils.GenerateToken(user.UserID, user.Role, global.Config.JWT.RefreshExpiry, global.Config.JWT.RefreshSecret)
 	if err != nil {
 		return nil, "", "", fmt.Errorf("Tạo refresh token thất bại: %w", err)
 	}

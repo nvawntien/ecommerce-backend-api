@@ -6,9 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitRouter() *gin.Engine{ 
+func InitRouter() *gin.Engine {
 	r := gin.Default()
 	userRouter := routers.RouterGroupApp.UserRouter
+	adminRouter := routers.RouterGroupApp.AdminRouter
 	mainGroup := r.Group("/api/v1")
 
 	{
@@ -16,5 +17,8 @@ func InitRouter() *gin.Engine{
 		userRouter.InitCategoryRouter(mainGroup)
 	}
 
+	{
+		adminRouter.InitCategoryRouter(mainGroup)
+	}
 	return r
 }
