@@ -13,6 +13,7 @@ func InitRouter() *gin.Engine{
 
 	{
 		userRouter.InitAuthRouter(mainGroup)
+		userRouter.InitCategoryRouter(mainGroup)
 	}
 
 	return r
