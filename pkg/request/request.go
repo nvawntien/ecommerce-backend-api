@@ -40,3 +40,8 @@ type CreateCategoryRequest struct {
 	Name     string `json:"name" binding:"required"`
 	ParentID *int   `json:"parent_id,omitempty"`
 }
+
+type UpdateCategoryRequest struct {
+	Name string `json:"name" binding:"required"`
+	ParentID *int `json:"parent_id,omitempty"`
+}

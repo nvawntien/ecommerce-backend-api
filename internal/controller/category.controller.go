@@ -5,6 +5,7 @@ import (
 	"go-ecommerce-backend-api/pkg/request"
 	"go-ecommerce-backend-api/pkg/response"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,4 +43,25 @@ func (cc *CategoryController) CreateCategory(c *gin.Context) {
 	}
 
 	response.Success(c, "Tạo danh mục thành công", nil)
+}
+
+func (cc *CategoryController) UpdateCategory(c *gin.Context) {
+	var req request.UpdateCategoryRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "Dữ liệu không hợp lệ")
+		return
+	}
+
+	categoryID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "ID danh mục không hợp lệ")
+		return
+	}
+
+	if err := cc.cateSvc.UpdateCategory(c.Request.Context(), categoryID, req); err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Cập nhật danh mục thành công", nil)
 }

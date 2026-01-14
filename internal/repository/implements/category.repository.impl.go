@@ -43,3 +43,14 @@ func (cr *categoryRepositoryImpl) CreateCategory(ctx context.Context, category m
 	).Scan(&category.ID)
 	return err
 }
+
+func (cr *categoryRepositoryImpl) UpdateCategory(ctx context.Context, categoryID int, updateData models.Category) error {	
+	query := `UPDATE categories SET parent_id = $1, name = $2, slug = $3 WHERE id = $4`
+	_, err := cr.pdb.ExecContext(ctx, query,
+		updateData.ParentID,
+		updateData.Name,
+		updateData.Slug,
+		categoryID,
+	)
+	return err
+}

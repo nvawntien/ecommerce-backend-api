@@ -16,5 +16,6 @@ func (cr *CategoryRouter) InitCategoryRouter(r *gin.RouterGroup) {
 	category := r.Group("/categories")
 	{
 		category.POST("/create",  middlewares.IsAuthenticated(), middlewares.IsAdmin(), cateCtrl.CreateCategory)
+		category.PUT("/update/:id", middlewares.IsAuthenticated(), middlewares.IsAdmin(), cateCtrl.UpdateCategory)
 	}
 }

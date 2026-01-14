@@ -68,3 +68,36 @@ func (cs *categoryServiceImpl) CreateCategory(ctx context.Context, req request.C
 	
 	return nil
 }
+
+func (cs *categoryServiceImpl) UpdateCategory(ctx context.Context, categoryID int, req request.UpdateCategoryRequest) error {
+	category, err := cs.cateRepo.GetCategoryByID(ctx, categoryID)
+
+	if err != nil {
+		return fmt.Errorf("failed to get category: %w", err)
+	}
+
+	if category == nil {
+		return fmt.Errorf("category not found")
+	}
+
+	if req.ParentID != nil {
+		if *req.ParentID == categoryID {
+			return fmt.Errorf("a category cannot be its own parent")
+		}
+
+		_, err := cs.cateRepo.GetCategoryByID(ctx, *req.ParentID)
+		if err != nil {
+			return fmt.Errorf("parent category not found: %w", err)
+		}
+		category.ParentID = req.ParentID
+	}
+
+	category.Name = req.Name
+	category.Slug = slug.Make(req.Name)
+	
+	if err := cs.cateRepo.UpdateCategory(ctx, categoryID, *category); err != nil {
+		return fmt.Errorf("failed to update category: %w", err)
+	}
+
+	return nil
+}
