@@ -54,3 +54,9 @@ func (cr *categoryRepositoryImpl) UpdateCategory(ctx context.Context, categoryID
 	)
 	return err
 }
+
+func (cr *categoryRepositoryImpl) DeleteCategory(ctx context.Context, categoryID int) error {
+	query  := `DELETE FROM categories WHERE id = $1`
+	_, err := cr.pdb.ExecContext(ctx, query, categoryID)
+	return err
+}

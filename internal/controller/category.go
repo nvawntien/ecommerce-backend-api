@@ -65,3 +65,18 @@ func (cc *CategoryController) UpdateCategory(c *gin.Context) {
 
 	response.Success(c, "Cập nhật danh mục thành công", nil)
 }
+
+func (cc *CategoryController) DeleteCategory(c *gin.Context) {
+	categoryID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "ID danh mục không hợp lệ")
+		return
+	}
+
+	if err := cc.cateSvc.DeleteCategory(c.Request.Context(), categoryID); err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Xóa danh mục thành công", nil)
+}

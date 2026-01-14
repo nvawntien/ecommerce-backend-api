@@ -101,3 +101,20 @@ func (cs *categoryServiceImpl) UpdateCategory(ctx context.Context, categoryID in
 
 	return nil
 }
+
+func (cs *categoryServiceImpl) DeleteCategory(ctx context.Context, categoryID int) error {
+	category, err := cs.cateRepo.GetCategoryByID(ctx, categoryID)
+	if err != nil {
+		return fmt.Errorf("failed to get category: %w", err)
+	}
+
+	if category == nil {
+		return fmt.Errorf("category not found")
+	}
+
+	if err := cs.cateRepo.DeleteCategory(ctx, categoryID); err != nil {
+		return fmt.Errorf("failed to delete category: %w", err)
+	}
+
+	return nil
+}

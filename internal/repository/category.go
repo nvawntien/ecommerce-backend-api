@@ -10,4 +10,5 @@ type CategoryRepository interface {
 	GetCategoryByID(ctx context.Context, id int) (*models.Category, error)
 	CreateCategory(ctx context.Context, category models.Category) error
 	UpdateCategory(ctx context.Context, categoryID int, updatedData models.Category) error
+	DeleteCategory(ctx context.Context, categoryID int) error
 }
