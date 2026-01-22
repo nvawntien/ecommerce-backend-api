@@ -19,6 +19,7 @@ func InitRouter() *gin.Engine {
 
 	{
 		adminRouter.InitCategoryRouter(mainGroup)
+		adminRouter.InitProductRouter(mainGroup)
 	}
 	return r
 }
