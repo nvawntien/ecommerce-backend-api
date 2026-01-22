@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type ProductController struct {
@@ -32,4 +33,22 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 	}
 
 	response.Success(c, "Tạo sản phẩm thành công", nil)
+}
+
+func (pc *ProductController) GetProduct(c *gin.Context) {
+	// products/:id
+	productID := c.Param("id")
+	
+	if _, err := uuid.Parse(productID); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "ID sản phẩm không hợp lệ")
+		return
+	}
+
+	product, err := pc.productSvc.GetProduct(c.Request.Context(), productID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Lấy sản phẩm thành công", product)	
 }

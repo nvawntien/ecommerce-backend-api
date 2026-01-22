@@ -35,3 +35,23 @@ func (pr *productRepositoryImpl) CreateProductVariant(ctx context.Context, varia
 	_, err := executor.NamedExecContext(ctx, query, variant)
 	return err
 }
+
+func (pr *productRepositoryImpl) GetProductByID(ctx context.Context, productID string) (*models.Product, error) {
+	product := &models.Product{}
+	query := `SELECT * FROM products WHERE id = $1`
+	err := pr.db.GetContext(ctx, product, query, productID)
+	if err != nil {
+		return nil, err
+	}
+	return product, nil
+}
+
+func (p *productRepositoryImpl) GetVariantsByProductID(ctx context.Context, productID string) ([]models.ProductVariant, error) {
+	variants := []models.ProductVariant{}
+	query := `SELECT * FROM product_variants WHERE product_id = $1`
+	err := p.db.SelectContext(ctx, &variants, query, productID)
+	if err != nil {
+		return nil, err
+	}
+	return variants, nil
+}

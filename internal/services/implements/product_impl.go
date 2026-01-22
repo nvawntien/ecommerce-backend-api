@@ -59,3 +59,18 @@ func (p *productServiceImpl) CreateProduct(ctx context.Context, req request.Crea
 		return nil
 	})
 }
+
+func (p *productServiceImpl) GetProduct(ctx context.Context, productID string) (*models.Product, error) {
+	product, err := p.productRepo.GetProductByID(ctx, productID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get product: %w", err)
+	}
+
+	variants, err := p.productRepo.GetVariantsByProductID(ctx, productID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get product variants: %w", err)
+	}
+
+	product.Variants = variants
+	return product, nil
+}

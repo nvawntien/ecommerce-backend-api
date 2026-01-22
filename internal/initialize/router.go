@@ -17,6 +17,7 @@ func InitRouter() *gin.Engine {
 		userGroup := mainGroup.Group("/user")
 		userRouter.InitAuthRouter(userGroup)
 		userRouter.InitCategoryRouter(userGroup)
+		userRouter.InitProductRouter(userGroup)
 	}
 
 	//private api

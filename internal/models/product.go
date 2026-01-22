@@ -10,4 +10,5 @@ type Product struct {
 	BasePrice   float64          `json:"base_price" db:"base_price"`
 	CreatedAt   string           `json:"created_at" db:"created_at"`
 	UpdatedAt   string           `json:"updated_at" db:"updated_at"`
+	Variants    []ProductVariant `json:"variants"`
 }
