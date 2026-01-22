@@ -12,14 +12,18 @@ func InitRouter() *gin.Engine {
 	adminRouter := routers.RouterGroupApp.AdminRouter
 	mainGroup := r.Group("/api/v1")
 
+	//public api
 	{
-		userRouter.InitAuthRouter(mainGroup)
-		userRouter.InitCategoryRouter(mainGroup)
+		userGroup := mainGroup.Group("/user")
+		userRouter.InitAuthRouter(userGroup)
+		userRouter.InitCategoryRouter(userGroup)
 	}
 
+	//private api
 	{
-		adminRouter.InitCategoryRouter(mainGroup)
-		adminRouter.InitProductRouter(mainGroup)
+		adminGroup := mainGroup.Group("/admin")
+		adminRouter.InitCategoryRouter(adminGroup)
+		adminRouter.InitProductRouter(adminGroup)
 	}
 	return r
 }
