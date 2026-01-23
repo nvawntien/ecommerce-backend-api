@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"go-ecommerce-backend-api/global"
 	"go-ecommerce-backend-api/internal/services"
 	"go-ecommerce-backend-api/pkg/request"
 	"go-ecommerce-backend-api/pkg/response"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type ProductController struct {
@@ -51,4 +53,33 @@ func (pc *ProductController) GetProduct(c *gin.Context) {
 	}
 
 	response.Success(c, "Lấy sản phẩm thành công", product)	
+}
+
+func (pc *ProductController) GetListProducts(c *gin.Context) {
+	var req request.ProductListRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "Dữ liệu không hợp lệ")
+		return
+	}
+
+	if req.Limit <= 0 {
+		req.Limit = 10
+	}
+
+	if req.Limit > 100 {
+		req.Limit = 100
+	}
+
+	if req.Page < 1 {
+		req.Page = 1
+	}
+
+	products, err := pc.productSvc.GetListProducts(c.Request.Context(), req)
+	if err != nil {
+		//global.Logger.Error("err is here: ", zap.Error(err))
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Lấy danh sách sản phẩm thành công", products)
 }

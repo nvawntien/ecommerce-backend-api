@@ -6,6 +6,7 @@ import (
 	"go-ecommerce-backend-api/internal/models"
 	"go-ecommerce-backend-api/internal/repository"
 	"go-ecommerce-backend-api/pkg/database"
+	"go-ecommerce-backend-api/pkg/request"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -54,4 +55,62 @@ func (p *productRepositoryImpl) GetVariantsByProductID(ctx context.Context, prod
 		return nil, err
 	}
 	return variants, nil
+}
+
+func (pr *productRepositoryImpl) GetListProducts(ctx context.Context, filter request.ProductListRequest) ([]models.Product, int, error) {
+	query := `SELECT * FROM products WHERE 1=1`
+	countQuery := `SELECT count(*) FROM products WHERE 1=1`
+	args := make(map[string]interface{})
+
+	if filter.Keyword != "" {
+		condition := ` AND name ILIKE: keyword`
+		query += condition
+		countQuery += condition
+		args["keyword"] = "%" + filter.Keyword + "%"
+	}
+
+	if filter.CategoryID != 0 {
+		condition := ` AND category_id = :category_id`
+		query += condition
+		countQuery += condition
+		args["category_id"] = filter.CategoryID
+	}
+
+	var total int
+	rowsCount, err := pr.db.NamedQueryContext(ctx, countQuery, args)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	defer rowsCount.Close()
+
+	if rowsCount.Next() {
+		if err := rowsCount.Scan(&total); err != nil {
+			return nil, 0, err
+		}
+	}
+
+	offset := (filter.Page - 1) * filter.Limit
+	args["limit"] = filter.Limit
+	args["offset"] = offset
+
+	query += ` ORDER BY created_at DESC LIMIT :limit OFFSET :offset`
+	
+	var products []models.Product
+	rows, err := pr.db.NamedQueryContext(ctx, query, args)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var product models.Product 
+		if err := rows.StructScan(&product); err != nil {
+			return nil, 0, err
+		}
+		products = append(products, product)
+	}
+
+	return products, total, nil
 }

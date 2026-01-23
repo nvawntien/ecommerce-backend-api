@@ -74,3 +74,22 @@ func (p *productServiceImpl) GetProduct(ctx context.Context, productID string) (
 	product.Variants = variants
 	return product, nil
 }
+
+func (p *productServiceImpl) GetListProducts(ctx context.Context, filter request.ProductListRequest) (*models.ProductListData, error) {
+	products, total, err := p.productRepo.GetListProducts(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get list products: %w", err)
+	}
+
+	totalPages := (total + filter.Limit - 1) / filter.Limit
+
+	result := &models.ProductListData{
+		Data: products,
+		Total: total,
+		Page: filter.Page,
+		Limit: filter.Limit,
+		TotalPages: totalPages,
+	}
+
+	return result, nil
+}
