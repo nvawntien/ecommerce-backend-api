@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"go-ecommerce-backend-api/global"
 	"go-ecommerce-backend-api/internal/services"
 	"go-ecommerce-backend-api/pkg/request"
 	"go-ecommerce-backend-api/pkg/response"
@@ -9,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 )
 
 type ProductController struct {
@@ -40,7 +38,7 @@ func (pc *ProductController) CreateProduct(c *gin.Context) {
 func (pc *ProductController) GetProduct(c *gin.Context) {
 	// products/:id
 	productID := c.Param("id")
-	
+
 	if _, err := uuid.Parse(productID); err != nil {
 		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "ID sản phẩm không hợp lệ")
 		return
@@ -52,7 +50,7 @@ func (pc *ProductController) GetProduct(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, "Lấy sản phẩm thành công", product)	
+	response.Success(c, "Lấy sản phẩm thành công", product)
 }
 
 func (pc *ProductController) GetListProducts(c *gin.Context) {
