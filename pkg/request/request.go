@@ -67,3 +67,11 @@ type ProductListRequest struct {
 	Keyword    string `form:"keyword"`
 	CategoryID int    `form:"category_id"`
 }
+
+type UpdateProductRequest struct {
+	CategoryID  *int     `json:"category_id"`
+	Name        *string  `json:"name"`
+	Description *string  `json:"description"`
+	Brand       *string  `json:"brand"`
+	BasePrice   *float64 `json:"base_price" binding:"omitempty,gte=0"`
+}

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"go-ecommerce-backend-api/global"
 	"go-ecommerce-backend-api/internal/services"
 	"go-ecommerce-backend-api/pkg/request"
 	"go-ecommerce-backend-api/pkg/response"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type ProductController struct {
@@ -80,4 +82,27 @@ func (pc *ProductController) GetListProducts(c *gin.Context) {
 	}
 
 	response.Success(c, "Lấy danh sách sản phẩm thành công", products)
+}
+
+func (pc *ProductController) UpdateProduct(c *gin.Context) {
+	productID := c.Param("id")
+
+	if _, err := uuid.Parse(productID); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "ID sản phẩm không hợp lệ")
+		return
+	}
+
+	var req request.UpdateProductRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		global.Logger.Error("Bind JSON error: ", zap.Error(err))
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "Dữ liệu không hợp lệ")
+		return
+	}
+
+	if err := pc.productSvc.UpdateProduct(c.Request.Context(), productID, req); err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Cập nhật sản phẩm thành công", nil)
 }

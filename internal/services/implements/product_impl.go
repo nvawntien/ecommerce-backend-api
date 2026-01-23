@@ -2,6 +2,7 @@ package implements
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"go-ecommerce-backend-api/internal/models"
 	"go-ecommerce-backend-api/internal/repository"
@@ -84,12 +85,49 @@ func (p *productServiceImpl) GetListProducts(ctx context.Context, filter request
 	totalPages := (total + filter.Limit - 1) / filter.Limit
 
 	result := &models.ProductListData{
-		Data: products,
-		Total: total,
-		Page: filter.Page,
-		Limit: filter.Limit,
+		Data:       products,
+		Total:      total,
+		Page:       filter.Page,
+		Limit:      filter.Limit,
 		TotalPages: totalPages,
 	}
 
 	return result, nil
+}
+
+func (p *productServiceImpl) UpdateProduct(ctx context.Context, productID string, req request.UpdateProductRequest) error {
+	currentProduct, err := p.productRepo.GetProductByID(ctx, productID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("product not found")
+		}
+		return fmt.Errorf("failed to get current product: %w", err)
+	}
+
+	if req.CategoryID != nil {
+		currentProduct.CategoryID = *req.CategoryID
+	}
+
+	if req.Name != nil {
+		currentProduct.Name = *req.Name
+		currentProduct.Slug = slug.Make(*req.Name)
+	}
+
+	if req.Description != nil {
+		currentProduct.Description = *req.Description
+	}
+
+	if req.Brand != nil {
+		currentProduct.Brand = *req.Brand
+	}
+
+	if req.BasePrice != nil {
+		currentProduct.BasePrice = *req.BasePrice
+	}
+
+	if err := p.productRepo.UpdateProduct(ctx, currentProduct); err != nil {
+		return fmt.Errorf("failed to update product: %w", err)
+	}
+
+	return nil
 }

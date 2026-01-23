@@ -2,6 +2,7 @@ package implements
 
 import (
 	"context"
+	"database/sql"
 	"go-ecommerce-backend-api/global"
 	"go-ecommerce-backend-api/internal/models"
 	"go-ecommerce-backend-api/internal/repository"
@@ -95,7 +96,7 @@ func (pr *productRepositoryImpl) GetListProducts(ctx context.Context, filter req
 	args["offset"] = offset
 
 	query += ` ORDER BY created_at DESC LIMIT :limit OFFSET :offset`
-	
+
 	var products []models.Product
 	rows, err := pr.db.NamedQueryContext(ctx, query, args)
 	if err != nil {
@@ -105,7 +106,7 @@ func (pr *productRepositoryImpl) GetListProducts(ctx context.Context, filter req
 	defer rows.Close()
 
 	for rows.Next() {
-		var product models.Product 
+		var product models.Product
 		if err := rows.StructScan(&product); err != nil {
 			return nil, 0, err
 		}
@@ -113,4 +114,26 @@ func (pr *productRepositoryImpl) GetListProducts(ctx context.Context, filter req
 	}
 
 	return products, total, nil
+}
+
+func (pr *productRepositoryImpl) UpdateProduct(ctx context.Context, product *models.Product) error {
+	query := `UPDATE products SET category_id = :category_id, name = :name, slug = :slug,
+		description = :description, brand = :brand, base_price = :base_price, updated_at = :updated_at
+		WHERE id = :id`
+
+	result, err := pr.db.NamedExecContext(ctx, query, product)
+	if err != nil {
+		return err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }
