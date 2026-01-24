@@ -151,7 +151,7 @@ func (pr *productRepositoryImpl) DeleteProductByID(ctx context.Context, productI
 	if rows == 0 {
 		return sql.ErrNoRows
 	}
-	
+
 	return err
 }
 
