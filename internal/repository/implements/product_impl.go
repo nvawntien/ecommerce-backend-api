@@ -137,3 +137,27 @@ func (pr *productRepositoryImpl) UpdateProduct(ctx context.Context, product *mod
 
 	return nil
 }
+
+func (pr *productRepositoryImpl) DeleteProductByID(ctx context.Context, productID string) error {
+	executor := database.GetExecutor(ctx, pr.db)
+	query := `DELETE FROM products WHERE id = $1`
+	result, err := executor.ExecContext(ctx, query, productID)
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return sql.ErrNoRows
+	}
+	
+	return err
+}
+
+func (pr *productRepositoryImpl) DeleteProductVariantsByID(ctx context.Context, productID string) error {
+	executor := database.GetExecutor(ctx, pr.db)
+	query := `DELETE FROM product_variants WHERE product_id = $1`
+	_, err := executor.ExecContext(ctx, query, productID)
+	return err
+}

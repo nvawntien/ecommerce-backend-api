@@ -11,4 +11,5 @@ type ProductService interface {
 	GetProduct(ctx context.Context, productID string) (*models.Product, error)
 	GetListProducts(ctx context.Context, filter request.ProductListRequest) (*models.ProductListData, error)
 	UpdateProduct(ctx context.Context, productID string, req request.UpdateProductRequest) error
+	DeleteProduct(ctx context.Context, productID string) error
 }

@@ -13,4 +13,6 @@ type ProductRepository interface {
 	GetVariantsByProductID(ctx context.Context, productID string) ([]models.ProductVariant, error)
 	GetListProducts(ctx context.Context, filter request.ProductListRequest) ([]models.Product, int, error)
 	UpdateProduct(ctx context.Context, product *models.Product) error 
+	DeleteProductVariantsByID(ctx context.Context, productID string) error
+	DeleteProductByID(ctx context.Context, productID string) error
 }

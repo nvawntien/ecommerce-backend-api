@@ -131,3 +131,21 @@ func (p *productServiceImpl) UpdateProduct(ctx context.Context, productID string
 
 	return nil
 }
+
+func (p *productServiceImpl) DeleteProduct(ctx context.Context, productID string) error {
+	_, err := p.productRepo.GetProductByID(ctx, productID)
+	if err != nil {
+		return fmt.Errorf("product not found: %w", err)
+	}
+	
+	return p.transactor.WithTransaction(ctx, func (txCtx context.Context) error {
+		if err := p.productRepo.DeleteProductVariantsByID(txCtx, productID); err != nil {
+			return fmt.Errorf("failed to delete product variant; %w", err)
+		}
+		
+		if err := p.productRepo.DeleteProductByID(txCtx, productID); err != nil {
+			return fmt.Errorf("failed to delete product: %w", err)
+		}
+		return nil
+	})
+}

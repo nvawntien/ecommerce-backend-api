@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"database/sql"
 	"go-ecommerce-backend-api/global"
 	"go-ecommerce-backend-api/internal/services"
 	"go-ecommerce-backend-api/pkg/request"
@@ -105,4 +106,24 @@ func (pc *ProductController) UpdateProduct(c *gin.Context) {
 	}
 
 	response.Success(c, "Cập nhật sản phẩm thành công", nil)
+}
+
+func (pc *ProductController) DeleteProduct(c *gin.Context) {
+	productID := c.Param("id")
+
+	if _, err := uuid.Parse(productID); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "ID sản phẩm không hợp lệ")
+		return
+	}
+
+	if err := pc.productSvc.DeleteProduct(c.Request.Context(), productID); err != nil {
+		if err == sql.ErrNoRows {
+			response.Error(c, http.StatusNotFound, response.CodeInternalError, err.Error())
+			return
+		}
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "Delete product succesfully", nil)
 }
