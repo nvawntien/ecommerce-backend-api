@@ -75,3 +75,15 @@ type UpdateProductRequest struct {
 	Brand       *string  `json:"brand"`
 	BasePrice   *float64 `json:"base_price" binding:"omitempty,gte=0"`
 }
+
+type CreateOrderItemRequest struct {
+	VariantID int `json:"variant_id" binding:"required"`
+	Quantity  int `json:"quantity" binding:"required,gt=0"`
+}
+
+type CreateOrderRequest struct {
+	UserID          string                   `json:"user_id" binding:"required"`
+	ShippingAddress string                   `json:"shipping_address" binding:"required"`
+	PaymentMethod   string                   `json:"payment_method" binding:"required"`
+	Items           []CreateOrderItemRequest `json:"items" binding:"required,dive"`
+}

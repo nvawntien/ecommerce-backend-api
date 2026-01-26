@@ -15,6 +15,6 @@ func (p *ProductRouter) InitProductRouter(r *gin.RouterGroup) {
 	product := r.Group("/products")
 	{
 		product.GET("/:id", productCtrl.GetProduct)
-		product.GET("", productCtrl.GetListProducts)
+		product.GET("/", productCtrl.GetListProducts)
 	}
 }

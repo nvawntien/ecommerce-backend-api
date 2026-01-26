@@ -15,8 +15,8 @@ func (pr *ProductRouter) InitProductRouter(r *gin.RouterGroup) {
 
 	product := r.Group("/products")
 	{  
-		product.POST("/create", middlewares.IsAuthenticated(), middlewares.IsAdmin(), productCtrl.CreateProduct)
-		product.PUT("/update/:id", middlewares.IsAuthenticated(), middlewares.IsAdmin(), productCtrl.UpdateProduct)
+		product.POST("/", middlewares.IsAuthenticated(), middlewares.IsAdmin(), productCtrl.CreateProduct)
+		product.PUT("/:id", middlewares.IsAuthenticated(), middlewares.IsAdmin(), productCtrl.UpdateProduct)
 		product.DELETE("/:id", middlewares.IsAuthenticated(), middlewares.IsAdmin(), productCtrl.DeleteProduct)
 	}
 }

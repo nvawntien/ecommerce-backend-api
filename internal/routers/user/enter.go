@@ -4,4 +4,5 @@ type UserRouterGroup struct {
 	AuthRouter
 	CategoryRouter
 	ProductRouter
+	OrderRouter
 }
