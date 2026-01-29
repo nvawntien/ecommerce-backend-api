@@ -18,5 +18,6 @@ func (or *OrderRouter) InitOrderRouter(r *gin.RouterGroup) {
 	{
 		order.POST("/", middlewares.IsAuthenticated(), orderCtrl.CreateOrder)
 		order.GET("/:id", middlewares.IsAuthenticated(), orderCtrl.GetOrderDetail)
+		order.GET("/mine", middlewares.IsAuthenticated(), orderCtrl.GetMyOrders)
 	}
 }

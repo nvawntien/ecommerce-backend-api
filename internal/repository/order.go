@@ -17,4 +17,6 @@ type OrderRepository interface {
 	GetOrderByID(ctx context.Context, orderID string) (*models.Order, error)
 
 	GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]models.OrderItemList, error)
+
+	GetOrderByUserID(ctx context.Context, userID string) ([]models.Order, error)
 }

@@ -108,3 +108,12 @@ func (os *orderServiceImpl) GetOrderDetail(ctx context.Context, orderID string) 
 
 	return orderDetail, nil
 }
+
+func (os *orderServiceImpl) GetMyOrders(ctx context.Context, userID string) ([]models.Order, error) {
+	orders, err := os.orderRepo.GetOrderByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get orders: %w", err)
+	}
+
+	return orders, nil
+}

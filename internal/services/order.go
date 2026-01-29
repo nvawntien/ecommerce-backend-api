@@ -8,5 +8,8 @@ import (
 
 type OrderService interface {
 	CreateOrder(ctx context.Context, req request.CreateOrderRequest) (*models.Order, error)
+
 	GetOrderDetail(ctx context.Context, orderID string) (*models.OrderDetail, error)
+
+	GetMyOrders(ctx context.Context, userID string) ([]models.Order, error)
 }

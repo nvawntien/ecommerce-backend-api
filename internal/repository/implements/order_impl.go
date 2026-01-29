@@ -103,3 +103,17 @@ func (or *orderRepositoryImpl) GetOrderItemsByOrderID(ctx context.Context, order
 
 	return items, nil
 }
+
+func (or *orderRepositoryImpl) GetOrderByUserID(ctx context.Context, userID string) ([]models.Order, error) {
+	executor := database.GetExecutor(ctx, or.db)
+	query := `
+		SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC
+	`
+
+	var orders []models.Order
+	if err := executor.SelectContext(ctx, &orders, query, userID); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}

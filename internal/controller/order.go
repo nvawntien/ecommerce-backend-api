@@ -51,3 +51,19 @@ func (oc *OrderController) GetOrderDetail(c *gin.Context) {
 
 	response.Success(c, "get order detail successfuly", order)
 }
+
+func (oc *OrderController) GetMyOrders(c *gin.Context) {
+	userID := c.GetString("user_id")
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, response.CodeUnauthorized, "Invalid token claims")
+		return
+	}
+
+	orders, err := oc.orderSvc.GetMyOrders(c.Request.Context(), userID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "get my orders successfully", orders)
+}
