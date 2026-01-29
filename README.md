@@ -84,5 +84,6 @@ The project follows **Clean Architecture** to decouple business logic from infra
 
 1. **Clone the repository**
    ```bash
-   git clone [https://github.com/nvawntien/go-ecommerce-backend.git](https://github.com/nvawntien/go-ecommerce-backend.git)
+   git clone https://github.com/nvawntien/go-ecommerce-backend.git
+
    cd go-ecommerce-backend
