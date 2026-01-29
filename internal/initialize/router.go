@@ -19,6 +19,7 @@ func InitRouter() *gin.Engine {
 		userRouter.InitCategoryRouter(userGroup)
 		userRouter.InitProductRouter(userGroup)
 		userRouter.InitOrderRouter(userGroup)
+		userRouter.InitReviewRouter(userGroup)
 	}
 
 	//private api

@@ -87,3 +87,9 @@ type CreateOrderRequest struct {
 	PaymentMethod   string                   `json:"payment_method" binding:"required"`
 	Items           []CreateOrderItemRequest `json:"items" binding:"required,dive"`
 }
+
+type CreateReviewRequest struct {
+	ProductID string `json:"product_id" binding:"required"`
+	Rating    int    `json:"rating" binding:"required,min=1,max=5"`
+	Comment   string `json:"comment"`
+}
