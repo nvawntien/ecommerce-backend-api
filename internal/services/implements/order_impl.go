@@ -89,3 +89,22 @@ func (os *orderServiceImpl) CreateOrder(ctx context.Context, req request.CreateO
 	
 	return order, nil
 } 
+
+func (os *orderServiceImpl) GetOrderDetail(ctx context.Context, orderID string) (*models.OrderDetail, error) {
+	order, err := os.orderRepo.GetOrderByID(ctx, orderID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get order: %w", err)
+	}
+
+	items, err := os.orderRepo.GetOrderItemsByOrderID(ctx, orderID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get order items: %w", err)
+	}
+
+	orderDetail := &models.OrderDetail{
+		Order: *order,
+		Items: items,
+	}
+
+	return orderDetail, nil
+}

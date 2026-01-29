@@ -13,4 +13,8 @@ type OrderRepository interface {
 	CreateOrderItem(ctx context.Context, item *models.OrderItem) error 
 
 	DecreaseStock(ctx context.Context, variantID int, quantity int) error
+
+	GetOrderByID(ctx context.Context, orderID string) (*models.Order, error)
+
+	GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]models.OrderItemList, error)
 }

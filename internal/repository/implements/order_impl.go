@@ -68,3 +68,38 @@ func (or *orderRepositoryImpl) DecreaseStock(ctx context.Context, variantID int,
 	_, err := executor.ExecContext(ctx, query, quantity, variantID)
 	return err
 }
+
+func (or *orderRepositoryImpl) GetOrderByID(ctx context.Context, orderID string) (*models.Order, error) {
+	executor := database.GetExecutor(ctx, or.db)
+
+	query := `
+		SELECT * FROM orders WHERE id = $1
+	`
+
+	order := &models.Order{}
+	if err := executor.GetContext(ctx, order, query, orderID); err != nil {
+		return nil, err
+	}
+
+	return order, nil
+}
+
+func (or *orderRepositoryImpl) GetOrderItemsByOrderID(ctx context.Context, orderID string) ([]models.OrderItemList, error) {
+	executor := database.GetExecutor(ctx, or.db)
+	query := `
+		SELECT 
+			oi.id, oi.variant_id, oi.quantity, oi.price_at_purchase,
+			p.name AS product_name,
+			pv.variant_name, pv.sku, pv.image_url
+		FROM order_items oi
+		JOIN product_variants pv ON oi.variant_id = pv.id
+		JOIN products p ON pv.product_id = p.id
+		WHERE oi.order_id = $1
+	`
+	var items []models.OrderItemList
+	if err := executor.SelectContext(ctx, &items, query, orderID); err != nil {
+		return nil, err
+	}
+
+	return items, nil
+}

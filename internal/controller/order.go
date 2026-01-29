@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type OrderController struct {
@@ -33,4 +34,20 @@ func (oc *OrderController) CreateOrder(c *gin.Context) {
 	}
 	
 	response.Success(c, "Create order successfully", order)
+}
+
+func (oc *OrderController) GetOrderDetail(c *gin.Context) {
+	orderID := c.Param("id")
+	if _, err := uuid.Parse(orderID); err != nil {
+		response.Error(c, http.StatusBadRequest, response.CodeInvalidParams, "orderID is invalid")
+		return
+	}
+
+	order, err := oc.orderSvc.GetOrderDetail(c.Request.Context(), orderID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, response.CodeInternalError, err.Error())
+		return
+	}
+
+	response.Success(c, "get order detail successfuly", order)
 }
